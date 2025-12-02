@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Inter:wght@400;500;600&display=swap"
         rel="stylesheet">
 
     <script>
@@ -20,20 +20,18 @@
                     colors: {
                         archive: {
                             black: '#111111',
-                            panel: '#2C2C2C',
-                            bg: '#1a1a1a',
-                            text: '#e6e6e6',
-                            muted: '#999999',
-                            border: '#444444',
-                            accent: '#ffffff', // Stark white for emphasis
+                            panel: '#1e1e1e',
+                            bg: '#151515',
+                            text: '#d4d4d4',
+                            muted: '#888888',
+                            border: '#333333',
+                            highlight: '#ffffff',
+                            link: '#4a9eff'
                         }
                     },
                     fontFamily: {
                         mono: ['"Courier Prime"', 'monospace'],
-                        serif: ['"Libre Baskerville"', 'serif'],
-                    },
-                    boxShadow: {
-                        'retro': '4px 4px 0px 0px rgba(0,0,0,0.5)',
+                        sans: ['"Inter"', 'sans-serif'],
                     }
                 }
             }
@@ -41,12 +39,87 @@
     </script>
     <style>
         body {
-            background-color: #1a1a1a;
+            background-color: #151515;
         }
 
-        /* Custom scrollbar */
+        /* Dense Data Table Styles */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+        }
+
+        .data-table th {
+            text-align: left;
+            padding: 8px 12px;
+            border-bottom: 1px solid #333;
+            color: #888;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-size: 11px;
+        }
+
+        .data-table td {
+            padding: 6px 12px;
+            border-bottom: 1px solid #222;
+            color: #ccc;
+            vertical-align: middle;
+        }
+
+        .data-table tr:hover {
+            background-color: #1e1e1e;
+        }
+
+        .data-table .col-icon {
+            width: 30px;
+            text-align: center;
+            color: #666;
+        }
+
+        .data-table .col-date {
+            width: 120px;
+            font-family: 'Courier Prime', monospace;
+            color: #666;
+            font-size: 11px;
+        }
+
+        .data-table .col-size {
+            width: 80px;
+            font-family: 'Courier Prime', monospace;
+            color: #666;
+            text-align: right;
+            font-size: 11px;
+        }
+
+        /* Sidebar Tree */
+        .tree-item {
+            padding: 4px 8px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            border-radius: 2px;
+        }
+
+        .tree-item:hover {
+            background-color: #2a2a2a;
+            color: white;
+        }
+
+        .tree-item .count {
+            background: #333;
+            padding: 0 6px;
+            border-radius: 10px;
+            font-size: 10px;
+            color: #999;
+        }
+
+        /* Scrollbar */
         ::-webkit-scrollbar {
             width: 10px;
+            height: 10px;
         }
 
         ::-webkit-scrollbar-track {
@@ -54,406 +127,352 @@
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #444;
-            border: 1px solid #111;
+            background: #333;
+            border: 2px solid #111;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: #666;
-        }
-
-        .archive-icon:hover {
-            filter: brightness(1.2);
-            transform: scale(1.05);
-        }
-
-        /* Brutalist focus states */
-        input:focus,
-        select:focus {
-            outline: 2px solid white;
-            outline-offset: -2px;
+            background: #555;
         }
     </style>
 </head>
 
-<body class="text-archive-text font-serif antialiased min-h-screen flex flex-col">
+<body class="text-archive-text font-sans antialiased h-screen flex flex-col overflow-hidden relative">
 
-    <!-- Universal Black Header -->
-    <header class="bg-black border-b border-archive-border py-2">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-12">
-            <!-- Brand -->
-            <div class="flex items-center gap-3">
-                <i class="fa-solid fa-landmark text-2xl text-white"></i>
-                <div class="flex flex-col">
-                    <span class="font-bold text-xl leading-none tracking-tight">Slugworks Archive</span>
-                    <span class="text-[10px] font-mono text-gray-400 uppercase tracking-widest">Universal Access to
-                        Knowledge</span>
+    <!-- Mobile Sidebar Overlay -->
+    <div id="sidebar-overlay" onclick="toggleSidebar()"
+        class="fixed inset-0 bg-black/80 z-30 hidden md:hidden backdrop-blur-sm transition-opacity"></div>
+
+    <!-- Condensed Header -->
+    <header class="bg-archive-black border-b border-archive-border shrink-0 z-20 relative">
+        <div class="flex items-center justify-between px-4 h-14 md:h-12">
+            <!-- Left Group: Menu & Brand -->
+            <div class="flex items-center gap-3 md:w-64 shrink-0">
+                <!-- Mobile Menu Button -->
+                <button onclick="toggleSidebar()" class="md:hidden text-gray-400 hover:text-white focus:outline-none">
+                    <i class="fa-solid fa-bars text-lg"></i>
+                </button>
+
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-landmark text-lg text-white"></i>
+                    <span class="font-bold text-sm tracking-tight text-white hidden sm:inline">Slugworks Archive</span>
+                    <span class="font-bold text-sm tracking-tight text-white sm:hidden">Slugworks</span>
                 </div>
             </div>
 
-            <!-- Login/Upload Area -->
-            <div class="flex items-center gap-4 text-sm font-bold">
-                <a href="#" class="text-gray-300 hover:text-white hover:underline decoration-1 underline-offset-4">LOG
-                    IN</a>
-                <span class="text-gray-600">|</span>
-                <a href="#" class="flex items-center gap-2 text-white hover:text-gray-300 uppercase">
-                    <i class="fa-solid fa-upload"></i> Upload
-                </a>
+            <!-- Global Search -->
+            <div class="flex-grow max-w-3xl mx-2 md:mx-4">
+                <div class="flex items-center bg-archive-bg border border-archive-border rounded-sm">
+                    <div class="px-2 md:px-3 text-gray-500 border-r border-archive-border hidden sm:block">
+                        <i class="fa-solid fa-database text-xs"></i>
+                    </div>
+                    <input type="text"
+                        class="w-full bg-transparent text-white px-3 py-1.5 text-xs md:text-sm font-mono placeholder-gray-600 focus:outline-none"
+                        placeholder="Search resources...">
+                    <select
+                        class="bg-transparent text-gray-400 text-xs px-1 md:px-2 py-1.5 border-l border-archive-border focus:outline-none font-mono hidden sm:block">
+                        <option>All</option>
+                        <option>Title</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Tools -->
+            <div class="flex items-center gap-3 text-xs font-mono shrink-0 justify-end md:w-64">
+                <a href="#" class="text-archive-link hover:underline hidden md:inline">Advanced</a>
+                <span class="text-gray-700 hidden md:inline">|</span>
+                <a href="#" class="text-white hover:text-gray-300 hidden sm:inline">LOG IN</a>
+                <button
+                    class="bg-white text-black px-2 md:px-3 py-1 font-bold uppercase hover:bg-gray-200 transition-colors text-[10px] md:text-xs">
+                    Upload
+                </button>
             </div>
         </div>
     </header>
 
-    <!-- Iconic Media Strip (Archive.org style) -->
-    <div class="bg-archive-panel border-b border-archive-border shadow-md relative z-10">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div
-                class="flex justify-center sm:justify-start overflow-x-auto py-4 gap-8 sm:gap-12 text-center whitespace-nowrap scrollbar-hide">
-                <a href="#"
-                    class="group flex flex-col items-center gap-2 opacity-70 hover:opacity-100 transition-opacity">
-                    <i class="fa-solid fa-globe text-2xl mb-1"></i>
-                    <span class="text-xs font-bold uppercase tracking-wide">Web</span>
-                </a>
-                <a href="#"
-                    class="group flex flex-col items-center gap-2 opacity-100 border-b-2 border-white pb-1 -mb-5">
-                    <i class="fa-solid fa-book text-2xl mb-1"></i>
-                    <span class="text-xs font-bold uppercase tracking-wide">Texts</span>
-                </a>
-                <a href="#"
-                    class="group flex flex-col items-center gap-2 opacity-70 hover:opacity-100 transition-opacity">
-                    <i class="fa-solid fa-film text-2xl mb-1"></i>
-                    <span class="text-xs font-bold uppercase tracking-wide">Video</span>
-                </a>
-                <a href="#"
-                    class="group flex flex-col items-center gap-2 opacity-70 hover:opacity-100 transition-opacity">
-                    <i class="fa-solid fa-microphone-lines text-2xl mb-1"></i>
-                    <span class="text-xs font-bold uppercase tracking-wide">Audio</span>
-                </a>
-                <a href="#"
-                    class="group flex flex-col items-center gap-2 opacity-70 hover:opacity-100 transition-opacity">
-                    <i class="fa-solid fa-floppy-disk text-2xl mb-1"></i>
-                    <span class="text-xs font-bold uppercase tracking-wide">Software</span>
-                </a>
-                <a href="#"
-                    class="group flex flex-col items-center gap-2 opacity-70 hover:opacity-100 transition-opacity">
-                    <i class="fa-solid fa-image text-2xl mb-1"></i>
-                    <span class="text-xs font-bold uppercase tracking-wide">Images</span>
-                </a>
+    <!-- Main Workspace -->
+    <div class="flex flex-1 overflow-hidden relative">
+
+        <!-- Sidebar: Faceted Browse (Responsive) -->
+        <aside id="main-sidebar"
+            class="w-64 bg-archive-bg border-r border-archive-border flex flex-col overflow-y-auto shrink-0 fixed inset-y-0 left-0 z-40 transform -translate-x-full md:translate-x-0 md:relative transition-transform duration-300 ease-in-out">
+
+            <div class="p-4 flex items-center justify-between md:hidden border-b border-archive-border">
+                <span class="font-bold text-white">Navigation</span>
+                <button onclick="toggleSidebar()" class="text-gray-400 hover:text-white"><i
+                        class="fa-solid fa-xmark"></i></button>
             </div>
-        </div>
+
+            <div class="p-3 border-b border-archive-border">
+                <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Browse by Subject</h3>
+                <div class="space-y-0.5 font-mono">
+                    <div class="tree-item"><span class="truncate">Computer Science</span> <span class="count">324</span>
+                    </div>
+                    <div class="tree-item"><span class="truncate">Engineering (Mech)</span> <span
+                            class="count">156</span></div>
+                    <div class="tree-item"><span class="truncate">Business Admin</span> <span class="count">203</span>
+                    </div>
+                    <div class="tree-item"><span class="truncate">Physics</span> <span class="count">98</span></div>
+                    <div class="tree-item"><span class="truncate">Mathematics</span> <span class="count">412</span>
+                    </div>
+                    <div class="tree-item"><span class="truncate">Literature</span> <span class="count">89</span></div>
+                    <div class="tree-item"><span class="truncate">Architecture</span> <span class="count">67</span>
+                    </div>
+                    <div class="tree-item"><span class="truncate">Psychology</span> <span class="count">145</span></div>
+                    <div class="tree-item"><span class="truncate">Chemistry</span> <span class="count">112</span></div>
+                </div>
+            </div>
+
+            <div class="p-3 border-b border-archive-border">
+                <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Media Type</h3>
+                <div class="space-y-1">
+                    <label class="flex items-center gap-2 text-xs hover:text-white cursor-pointer">
+                        <input type="checkbox" class="accent-white rounded-sm" checked>
+                        <i class="fa-regular fa-file-pdf w-4 text-center"></i> Documents (PDF)
+                    </label>
+                    <label class="flex items-center gap-2 text-xs hover:text-white cursor-pointer">
+                        <input type="checkbox" class="accent-white rounded-sm" checked>
+                        <i class="fa-regular fa-image w-4 text-center"></i> Images
+                    </label>
+                    <label class="flex items-center gap-2 text-xs hover:text-white cursor-pointer">
+                        <input type="checkbox" class="accent-white rounded-sm" checked>
+                        <i class="fa-solid fa-database w-4 text-center"></i> Datasets
+                    </label>
+                    <label class="flex items-center gap-2 text-xs hover:text-white cursor-pointer">
+                        <input type="checkbox" class="accent-white rounded-sm">
+                        <i class="fa-solid fa-file-audio w-4 text-center"></i> Audio Recordings
+                    </label>
+                </div>
+            </div>
+
+            <div class="p-3 mt-auto">
+                <div class="bg-archive-panel p-2 border border-archive-border text-[10px] font-mono text-gray-500">
+                    <div class="flex justify-between mb-1"><span>Storage:</span> <span>45%</span></div>
+                    <div class="w-full bg-black h-1 rounded-full overflow-hidden">
+                        <div class="bg-green-600 h-full" style="width: 45%"></div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 flex flex-col bg-archive-black min-w-0">
+
+            <!-- Toolbar -->
+            <div
+                class="h-10 border-b border-archive-border flex items-center px-4 justify-between bg-archive-bg shrink-0">
+                <div class="flex items-center gap-4 text-xs overflow-hidden">
+                    <span class="font-bold text-white whitespace-nowrap">All Resources</span>
+                    <span class="text-gray-600">/</span>
+                    <span class="text-gray-400 truncate">Viewing 1-50</span>
+                </div>
+                <div class="flex items-center gap-2 ml-2">
+                    <button class="p-1.5 text-gray-400 hover:text-white hidden sm:inline"><i
+                            class="fa-solid fa-list"></i></button>
+                    <button class="p-1.5 text-gray-600 hover:text-white hidden sm:inline"><i
+                            class="fa-solid fa-grip"></i></button>
+                    <div class="h-4 w-px bg-archive-border mx-2 hidden sm:block"></div>
+                    <select
+                        class="bg-transparent text-xs text-gray-400 focus:outline-none cursor-pointer max-w-[100px] sm:max-w-none">
+                        <option>Date (Desc)</option>
+                        <option>Title (A-Z)</option>
+                        <option>Size</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Data Table Container -->
+            <div class="flex-1 overflow-auto">
+                <table class="data-table whitespace-nowrap">
+                    <thead>
+                        <tr>
+                            <th class="w-8"></th>
+                            <th class="col-icon"><i class="fa-regular fa-file"></i></th>
+                            <th>Resource Title</th>
+                            <th class="hidden sm:table-cell">Subject / Tag</th>
+                            <th class="hidden md:table-cell">Uploader</th>
+                            <th class="col-date hidden lg:table-cell">Date</th>
+                            <th class="col-size">Size</th>
+                            <th class="w-10"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Row 1 -->
+                        <tr>
+                            <td class="text-center"><input type="checkbox" class="accent-white"></td>
+                            <td class="col-icon"><i class="fa-regular fa-file-pdf text-red-400"></i></td>
+                            <td>
+                                <div class="font-medium text-gray-200">CS101_Final_Review_Notes_2024.pdf</div>
+                                <div class="text-[10px] text-gray-500 font-mono truncate max-w-[150px] sm:max-w-none">
+                                    Full comprehensive review</div>
+                            </td>
+                            <td class="hidden sm:table-cell"><span
+                                    class="px-1.5 py-0.5 rounded bg-[#333] text-[10px] border border-[#444] text-gray-300">Comp
+                                    Sci</span></td>
+                            <td class="text-xs text-archive-link hidden md:table-cell">alex_admin</td>
+                            <td class="col-date hidden lg:table-cell">2023-11-02</td>
+                            <td class="col-size">2.4 MB</td>
+                            <td class="text-center text-gray-600 hover:text-white cursor-pointer"><i
+                                    class="fa-solid fa-ellipsis-vertical"></i></td>
+                        </tr>
+
+                        <!-- Row 2 -->
+                        <tr>
+                            <td class="text-center"><input type="checkbox" class="accent-white"></td>
+                            <td class="col-icon"><i class="fa-regular fa-file-code text-blue-400"></i></td>
+                            <td>
+                                <div class="font-medium text-gray-200">Data_Structures_Lab_04.py</div>
+                                <div class="text-[10px] text-gray-500 font-mono truncate max-w-[150px] sm:max-w-none">
+                                    Python Binary Search Trees</div>
+                            </td>
+                            <td class="hidden sm:table-cell"><span
+                                    class="px-1.5 py-0.5 rounded bg-[#333] text-[10px] border border-[#444] text-gray-300">Comp
+                                    Sci</span></td>
+                            <td class="text-xs text-archive-link hidden md:table-cell">sarah_dev</td>
+                            <td class="col-date hidden lg:table-cell">2023-11-01</td>
+                            <td class="col-size">14 KB</td>
+                            <td class="text-center text-gray-600 hover:text-white cursor-pointer"><i
+                                    class="fa-solid fa-ellipsis-vertical"></i></td>
+                        </tr>
+
+                        <!-- Row 3 -->
+                        <tr>
+                            <td class="text-center"><input type="checkbox" class="accent-white"></td>
+                            <td class="col-icon"><i class="fa-solid fa-flask text-green-400"></i></td>
+                            <td>
+                                <div class="font-medium text-gray-200">Organic_Chem_Reaction_Map.png</div>
+                                <div class="text-[10px] text-gray-500 font-mono truncate max-w-[150px] sm:max-w-none">
+                                    High res scan of reaction pathways</div>
+                            </td>
+                            <td class="hidden sm:table-cell"><span
+                                    class="px-1.5 py-0.5 rounded bg-[#333] text-[10px] border border-[#444] text-gray-300">Chemistry</span>
+                            </td>
+                            <td class="text-xs text-archive-link hidden md:table-cell">chem_wiz</td>
+                            <td class="col-date hidden lg:table-cell">2023-10-30</td>
+                            <td class="col-size">4.1 MB</td>
+                            <td class="text-center text-gray-600 hover:text-white cursor-pointer"><i
+                                    class="fa-solid fa-ellipsis-vertical"></i></td>
+                        </tr>
+
+                        <!-- Row 4 -->
+                        <tr>
+                            <td class="text-center"><input type="checkbox" class="accent-white"></td>
+                            <td class="col-icon"><i class="fa-regular fa-file-word text-blue-600"></i></td>
+                            <td>
+                                <div class="font-medium text-gray-200">History_Essay_Industrial.docx</div>
+                                <div class="text-[10px] text-gray-500 font-mono truncate max-w-[150px] sm:max-w-none">
+                                    Draft v2 with bibliography</div>
+                            </td>
+                            <td class="hidden sm:table-cell"><span
+                                    class="px-1.5 py-0.5 rounded bg-[#333] text-[10px] border border-[#444] text-gray-300">History</span>
+                            </td>
+                            <td class="text-xs text-archive-link hidden md:table-cell">j_doe</td>
+                            <td class="col-date hidden lg:table-cell">2023-10-28</td>
+                            <td class="col-size">500 KB</td>
+                            <td class="text-center text-gray-600 hover:text-white cursor-pointer"><i
+                                    class="fa-solid fa-ellipsis-vertical"></i></td>
+                        </tr>
+
+                        <!-- Row 5 -->
+                        <tr>
+                            <td class="text-center"><input type="checkbox" class="accent-white"></td>
+                            <td class="col-icon"><i class="fa-solid fa-book text-yellow-600"></i></td>
+                            <td>
+                                <div class="font-medium text-gray-200">Calculus_II_Textbook_Ch1-5.pdf</div>
+                                <div class="text-[10px] text-gray-500 font-mono truncate max-w-[150px] sm:max-w-none">
+                                    Scanned chapters for MATH201</div>
+                            </td>
+                            <td class="hidden sm:table-cell"><span
+                                    class="px-1.5 py-0.5 rounded bg-[#333] text-[10px] border border-[#444] text-gray-300">Mathematics</span>
+                            </td>
+                            <td class="text-xs text-archive-link hidden md:table-cell">math_club</td>
+                            <td class="col-date hidden lg:table-cell">2023-10-25</td>
+                            <td class="col-size">15.2 MB</td>
+                            <td class="text-center text-gray-600 hover:text-white cursor-pointer"><i
+                                    class="fa-solid fa-ellipsis-vertical"></i></td>
+                        </tr>
+
+                        <!-- More simulated rows for density -->
+                        <tr class="opacity-75">
+                            <td class="text-center"><input type="checkbox" class="accent-white"></td>
+                            <td class="col-icon"><i class="fa-regular fa-file-pdf text-red-400"></i></td>
+                            <td>
+                                <div class="font-medium text-gray-200">Physics_Lab_Report_Template.pdf</div>
+                                <div class="text-[10px] text-gray-500 font-mono truncate max-w-[150px] sm:max-w-none">
+                                    Standard ISO format for lab</div>
+                            </td>
+                            <td class="hidden sm:table-cell"><span
+                                    class="px-1.5 py-0.5 rounded bg-[#333] text-[10px] border border-[#444] text-gray-300">Physics</span>
+                            </td>
+                            <td class="text-xs text-archive-link hidden md:table-cell">lab_admin</td>
+                            <td class="col-date hidden lg:table-cell">2023-10-24</td>
+                            <td class="col-size">120 KB</td>
+                            <td class="text-center text-gray-600 hover:text-white cursor-pointer"><i
+                                    class="fa-solid fa-ellipsis-vertical"></i></td>
+                        </tr>
+                        <tr class="opacity-75">
+                            <td class="text-center"><input type="checkbox" class="accent-white"></td>
+                            <td class="col-icon"><i class="fa-solid fa-database text-purple-400"></i></td>
+                            <td>
+                                <div class="font-medium text-gray-200">Population_Stats_2020.csv</div>
+                                <div class="text-[10px] text-gray-500 font-mono truncate max-w-[150px] sm:max-w-none">
+                                    Raw dataset for SOC101</div>
+                            </td>
+                            <td class="hidden sm:table-cell"><span
+                                    class="px-1.5 py-0.5 rounded bg-[#333] text-[10px] border border-[#444] text-gray-300">Sociology</span>
+                            </td>
+                            <td class="text-xs text-archive-link hidden md:table-cell">data_prof</td>
+                            <td class="col-date hidden lg:table-cell">2023-10-22</td>
+                            <td class="col-size">450 KB</td>
+                            <td class="text-center text-gray-600 hover:text-white cursor-pointer"><i
+                                    class="fa-solid fa-ellipsis-vertical"></i></td>
+                        </tr>
+                        <tr class="opacity-75">
+                            <td class="text-center"><input type="checkbox" class="accent-white"></td>
+                            <td class="col-icon"><i class="fa-regular fa-image text-pink-400"></i></td>
+                            <td>
+                                <div class="font-medium text-gray-200">Renaissance_Art_Slides.pptx</div>
+                                <div class="text-[10px] text-gray-500 font-mono truncate max-w-[150px] sm:max-w-none">
+                                    Lecture 5 slides</div>
+                            </td>
+                            <td class="hidden sm:table-cell"><span
+                                    class="px-1.5 py-0.5 rounded bg-[#333] text-[10px] border border-[#444] text-gray-300">Art
+                                    History</span></td>
+                            <td class="text-xs text-archive-link hidden md:table-cell">art_dept</td>
+                            <td class="col-date hidden lg:table-cell">2023-10-20</td>
+                            <td class="col-size">18.5 MB</td>
+                            <td class="text-center text-gray-600 hover:text-white cursor-pointer"><i
+                                    class="fa-solid fa-ellipsis-vertical"></i></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Footer / Status Bar -->
+            <div
+                class="h-8 border-t border-archive-border bg-archive-bg flex items-center justify-between px-4 text-[10px] font-mono text-gray-500 shrink-0">
+                <div>Selected: 0</div>
+                <div>Server Status: <span class="text-green-500">Online</span></div>
+            </div>
+        </main>
     </div>
 
-    <!-- Main Content Area -->
-    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('main-sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
 
-        <!-- Search Block -->
-        <div class="bg-archive-panel p-1 border border-archive-border mb-12 shadow-retro max-w-4xl mx-auto">
-            <div class="bg-archive-bg border border-archive-border p-6 sm:p-8">
-                <div class="flex flex-col md:flex-row gap-0">
-                    <div class="flex-grow relative">
-                        <i
-                            class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-500"></i>
-                        <input type="text"
-                            class="w-full bg-black border border-gray-600 text-white pl-12 pr-4 py-3 font-mono text-sm placeholder-gray-600 focus:border-white transition-colors rounded-none"
-                            placeholder="Search the archive...">
-                    </div>
-                    <button
-                        class="bg-gray-200 hover:bg-white text-black font-bold uppercase px-8 py-3 text-sm tracking-wider border-t md:border-t-0 md:border-l border-gray-600 transition-colors">
-                        Go
-                    </button>
-                </div>
-
-                <!-- Metadata Filters -->
-                <div class="mt-4 flex flex-wrap gap-4 text-xs font-mono text-gray-400">
-                    <label class="flex items-center gap-2 cursor-pointer hover:text-white">
-                        <input type="radio" name="search_type" class="accent-white" checked> Metadata
-                    </label>
-                    <label class="flex items-center gap-2 cursor-pointer hover:text-white">
-                        <input type="radio" name="search_type" class="accent-white"> Text contents
-                    </label>
-                    <div class="ml-auto flex gap-3">
-                        <select class="bg-black border border-gray-700 rounded-none px-2 py-1 focus:border-white">
-                            <option>All Media</option>
-                            <option>Texts</option>
-                            <option>Audio</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Collection Stats -->
-        <div class="flex items-center justify-between mb-6 border-b-2 border-archive-border pb-2">
-            <h2 class="text-2xl font-bold text-white">Top Collections</h2>
-            <div class="font-mono text-xs text-archive-muted">
-                1,248 ITEMS • 15 COLLECTIONS
-            </div>
-        </div>
-
-        <!-- The Grid (Archive Style) -->
-        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
-
-            <!-- Item 1 -->
-            <a href="#" class="group block">
-                <div
-                    class="relative aspect-[3/4] bg-black border border-archive-border mb-3 group-hover:border-white transition-colors overflow-hidden">
-                    <div
-                        class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#222] to-[#111]">
-                        <i
-                            class="fa-solid fa-terminal text-4xl text-gray-600 group-hover:text-white transition-colors"></i>
-                    </div>
-                    <!-- Hover Overlay -->
-                    <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity">
-                    </div>
-                    <div
-                        class="absolute bottom-0 inset-x-0 bg-black/80 px-2 py-1 text-[10px] font-mono text-gray-400 border-t border-gray-800">
-                        <i class="fa-solid fa-eye mr-1"></i> 12k
-                    </div>
-                </div>
-                <h3
-                    class="font-bold text-sm leading-tight text-gray-300 group-hover:underline decoration-1 underline-offset-2 mb-1">
-                    Computer Science</h3>
-                <p class="font-mono text-[10px] text-gray-500 uppercase">324 Items</p>
-            </a>
-
-            <!-- Item 2 -->
-            <a href="#" class="group block">
-                <div
-                    class="relative aspect-[3/4] bg-black border border-archive-border mb-3 group-hover:border-white transition-colors overflow-hidden">
-                    <div
-                        class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#222] to-[#111]">
-                        <i
-                            class="fa-solid fa-gears text-4xl text-gray-600 group-hover:text-white transition-colors"></i>
-                    </div>
-                    <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity">
-                    </div>
-                    <div
-                        class="absolute bottom-0 inset-x-0 bg-black/80 px-2 py-1 text-[10px] font-mono text-gray-400 border-t border-gray-800">
-                        <i class="fa-solid fa-eye mr-1"></i> 8.4k
-                    </div>
-                </div>
-                <h3
-                    class="font-bold text-sm leading-tight text-gray-300 group-hover:underline decoration-1 underline-offset-2 mb-1">
-                    Mechanical Eng.</h3>
-                <p class="font-mono text-[10px] text-gray-500 uppercase">156 Items</p>
-            </a>
-
-            <!-- Item 3 -->
-            <a href="#" class="group block">
-                <div
-                    class="relative aspect-[3/4] bg-black border border-archive-border mb-3 group-hover:border-white transition-colors overflow-hidden">
-                    <div
-                        class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#222] to-[#111]">
-                        <i
-                            class="fa-solid fa-chart-line text-4xl text-gray-600 group-hover:text-white transition-colors"></i>
-                    </div>
-                    <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity">
-                    </div>
-                    <div
-                        class="absolute bottom-0 inset-x-0 bg-black/80 px-2 py-1 text-[10px] font-mono text-gray-400 border-t border-gray-800">
-                        <i class="fa-solid fa-eye mr-1"></i> 5.1k
-                    </div>
-                </div>
-                <h3
-                    class="font-bold text-sm leading-tight text-gray-300 group-hover:underline decoration-1 underline-offset-2 mb-1">
-                    Business Admin</h3>
-                <p class="font-mono text-[10px] text-gray-500 uppercase">203 Items</p>
-            </a>
-
-            <!-- Item 4 -->
-            <a href="#" class="group block">
-                <div
-                    class="relative aspect-[3/4] bg-black border border-archive-border mb-3 group-hover:border-white transition-colors overflow-hidden">
-                    <div
-                        class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#222] to-[#111]">
-                        <i class="fa-solid fa-atom text-4xl text-gray-600 group-hover:text-white transition-colors"></i>
-                    </div>
-                    <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity">
-                    </div>
-                    <div
-                        class="absolute bottom-0 inset-x-0 bg-black/80 px-2 py-1 text-[10px] font-mono text-gray-400 border-t border-gray-800">
-                        <i class="fa-solid fa-eye mr-1"></i> 2.3k
-                    </div>
-                </div>
-                <h3
-                    class="font-bold text-sm leading-tight text-gray-300 group-hover:underline decoration-1 underline-offset-2 mb-1">
-                    Physics</h3>
-                <p class="font-mono text-[10px] text-gray-500 uppercase">98 Items</p>
-            </a>
-
-            <!-- Item 5 -->
-            <a href="#" class="group block">
-                <div
-                    class="relative aspect-[3/4] bg-black border border-archive-border mb-3 group-hover:border-white transition-colors overflow-hidden">
-                    <div
-                        class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#222] to-[#111]">
-                        <i
-                            class="fa-solid fa-square-root-variable text-4xl text-gray-600 group-hover:text-white transition-colors"></i>
-                    </div>
-                    <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity">
-                    </div>
-                    <div
-                        class="absolute bottom-0 inset-x-0 bg-black/80 px-2 py-1 text-[10px] font-mono text-gray-400 border-t border-gray-800">
-                        <i class="fa-solid fa-eye mr-1"></i> 15k
-                    </div>
-                </div>
-                <h3
-                    class="font-bold text-sm leading-tight text-gray-300 group-hover:underline decoration-1 underline-offset-2 mb-1">
-                    Mathematics</h3>
-                <p class="font-mono text-[10px] text-gray-500 uppercase">412 Items</p>
-            </a>
-
-            <!-- Item 6 -->
-            <a href="#" class="group block">
-                <div
-                    class="relative aspect-[3/4] bg-black border border-archive-border mb-3 group-hover:border-white transition-colors overflow-hidden">
-                    <div
-                        class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#222] to-[#111]">
-                        <i
-                            class="fa-solid fa-book-open text-4xl text-gray-600 group-hover:text-white transition-colors"></i>
-                    </div>
-                    <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity">
-                    </div>
-                    <div
-                        class="absolute bottom-0 inset-x-0 bg-black/80 px-2 py-1 text-[10px] font-mono text-gray-400 border-t border-gray-800">
-                        <i class="fa-solid fa-eye mr-1"></i> 3.2k
-                    </div>
-                </div>
-                <h3
-                    class="font-bold text-sm leading-tight text-gray-300 group-hover:underline decoration-1 underline-offset-2 mb-1">
-                    Literature</h3>
-                <p class="font-mono text-[10px] text-gray-500 uppercase">89 Items</p>
-            </a>
-
-            <!-- Item 7 -->
-            <a href="#" class="group block">
-                <div
-                    class="relative aspect-[3/4] bg-black border border-archive-border mb-3 group-hover:border-white transition-colors overflow-hidden">
-                    <div
-                        class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#222] to-[#111]">
-                        <i
-                            class="fa-solid fa-compass-drafting text-4xl text-gray-600 group-hover:text-white transition-colors"></i>
-                    </div>
-                    <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity">
-                    </div>
-                    <div
-                        class="absolute bottom-0 inset-x-0 bg-black/80 px-2 py-1 text-[10px] font-mono text-gray-400 border-t border-gray-800">
-                        <i class="fa-solid fa-eye mr-1"></i> 1.8k
-                    </div>
-                </div>
-                <h3
-                    class="font-bold text-sm leading-tight text-gray-300 group-hover:underline decoration-1 underline-offset-2 mb-1">
-                    Architecture</h3>
-                <p class="font-mono text-[10px] text-gray-500 uppercase">67 Items</p>
-            </a>
-
-            <!-- Item 8 -->
-            <a href="#" class="group block">
-                <div
-                    class="relative aspect-[3/4] bg-black border border-archive-border mb-3 group-hover:border-white transition-colors overflow-hidden">
-                    <div
-                        class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#222] to-[#111]">
-                        <i
-                            class="fa-solid fa-brain text-4xl text-gray-600 group-hover:text-white transition-colors"></i>
-                    </div>
-                    <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity">
-                    </div>
-                    <div
-                        class="absolute bottom-0 inset-x-0 bg-black/80 px-2 py-1 text-[10px] font-mono text-gray-400 border-t border-gray-800">
-                        <i class="fa-solid fa-eye mr-1"></i> 4.5k
-                    </div>
-                </div>
-                <h3
-                    class="font-bold text-sm leading-tight text-gray-300 group-hover:underline decoration-1 underline-offset-2 mb-1">
-                    Psychology</h3>
-                <p class="font-mono text-[10px] text-gray-500 uppercase">145 Items</p>
-            </a>
-
-            <!-- Item 9 -->
-            <a href="#" class="group block">
-                <div
-                    class="relative aspect-[3/4] bg-black border border-archive-border mb-3 group-hover:border-white transition-colors overflow-hidden">
-                    <div
-                        class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#222] to-[#111]">
-                        <i
-                            class="fa-solid fa-flask text-4xl text-gray-600 group-hover:text-white transition-colors"></i>
-                    </div>
-                    <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity">
-                    </div>
-                    <div
-                        class="absolute bottom-0 inset-x-0 bg-black/80 px-2 py-1 text-[10px] font-mono text-gray-400 border-t border-gray-800">
-                        <i class="fa-solid fa-eye mr-1"></i> 2.1k
-                    </div>
-                </div>
-                <h3
-                    class="font-bold text-sm leading-tight text-gray-300 group-hover:underline decoration-1 underline-offset-2 mb-1">
-                    Chemistry</h3>
-                <p class="font-mono text-[10px] text-gray-500 uppercase">112 Items</p>
-            </a>
-
-            <!-- Request Item -->
-            <a href="#" class="group block opacity-50 hover:opacity-100 transition-opacity">
-                <div
-                    class="relative aspect-[3/4] bg-transparent border border-dashed border-gray-600 mb-3 flex items-center justify-center">
-                    <div class="flex flex-col items-center">
-                        <i class="fa-solid fa-plus text-3xl text-gray-500 mb-2"></i>
-                        <span class="text-[10px] font-mono text-gray-500 uppercase">Suggest Topic</span>
-                    </div>
-                </div>
-                <h3 class="font-bold text-sm leading-tight text-gray-400 mb-1">Contribute</h3>
-            </a>
-
-        </div>
-
-    </main>
-
-    <!-- Detailed Footer (Archive Style) -->
-    <footer class="bg-black border-t border-archive-border py-8 sm:py-12 mt-auto">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
-                <div>
-                    <h4 class="font-bold text-white mb-4 uppercase tracking-wider text-xs">About</h4>
-                    <ul class="space-y-2 text-sm text-archive-muted font-mono">
-                        <li><a href="#" class="hover:underline">Contact</a></li>
-                        <li><a href="#" class="hover:underline">Blog</a></li>
-                        <li><a href="#" class="hover:underline">Projects</a></li>
-                        <li><a href="#" class="hover:underline">Help</a></li>
-                        <li><a href="#" class="hover:underline">Donate</a></li>
-                        <li><a href="#" class="hover:underline">Jobs</a></li>
-                        <li><a href="#" class="hover:underline">Volunteer</a></li>
-                        <li><a href="#" class="hover:underline">People</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="font-bold text-white mb-4 uppercase tracking-wider text-xs">Resources</h4>
-                    <ul class="space-y-2 text-sm text-archive-muted font-mono">
-                        <li><a href="#" class="hover:underline">Online Books</a></li>
-                        <li><a href="#" class="hover:underline">Audio Books</a></li>
-                        <li><a href="#" class="hover:underline">Software Sites</a></li>
-                        <li><a href="#" class="hover:underline">Image Archive</a></li>
-                    </ul>
-                </div>
-                <div class="col-span-2 md:col-span-2">
-                    <div class="border border-archive-border p-4 bg-archive-bg">
-                        <p class="text-xs font-mono text-gray-400 mb-2">
-                            Slugworks Archive is a non-profit library of millions of free course materials, software,
-                            and lecture notes.
-                        </p>
-                        <div class="flex gap-4 mt-4">
-                            <i class="fa-brands fa-twitter text-xl text-gray-500 hover:text-white cursor-pointer"></i>
-                            <i class="fa-brands fa-instagram text-xl text-gray-500 hover:text-white cursor-pointer"></i>
-                            <i class="fa-brands fa-github text-xl text-gray-500 hover:text-white cursor-pointer"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="text-center border-t border-archive-border pt-6">
-                <p class="text-[10px] font-mono text-gray-600">
-                    &copy; 2025 SLUGWORKS ARCHIVE. ALL RIGHTS RESERVED.
-                </p>
-            </div>
-        </div>
-    </footer>
-
+            if (sidebar.classList.contains('-translate-x-full')) {
+                // Open sidebar
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+            } else {
+                // Close sidebar
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            }
+        }
+    </script>
 </body>
 
 </html>
