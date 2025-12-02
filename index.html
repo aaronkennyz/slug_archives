@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slugworks Archives | Repository</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        archive: {
+                            black: '#111111',
+                            panel: '#2C2C2C',
+                            bg: '#1a1a1a',
+                            text: '#e6e6e6',
+                            muted: '#999999',
+                            border: '#444444',
+                            accent: '#ffffff', // Stark white for emphasis
+                        }
+                    },
+                    fontFamily: {
+                        mono: ['"Courier Prime"', 'monospace'],
+                        serif: ['"Libre Baskerville"', 'serif'],
+                    },
+                    boxShadow: {
+                        'retro': '4px 4px 0px 0px rgba(0,0,0,0.5)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #1a1a1a;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #111;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #444;
+            border: 1px solid #111;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #666;
+        }
+
+        .archive-icon:hover {
+            filter: brightness(1.2);
+            transform: scale(1.05);
+        }
+
+        /* Brutalist focus states */
+        input:focus,
+        select:focus {
+            outline: 2px solid white;
+            outline-offset: -2px;
+        }
+    </style>
+</head>
+
+<body class="text-archive-text font-serif antialiased min-h-screen flex flex-col">
+
+    <!-- Universal Black Header -->
+    <header class="bg-black border-b border-archive-border py-2">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-12">
+            <!-- Brand -->
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-landmark text-2xl text-white"></i>
+                <div class="flex flex-col">
+                    <span class="font-bold text-xl leading-none tracking-tight">Slugworks Archive</span>
+                    <span class="text-[10px] font-mono text-gray-400 uppercase tracking-widest">Universal Access to
+                        Knowledge</span>
+                </div>
+            </div>
+
+            <!-- Login/Upload Area -->
+            <div class="flex items-center gap-4 text-sm font-bold">
+                <a href="#" class="text-gray-300 hover:text-white hover:underline decoration-1 underline-offset-4">LOG
+                    IN</a>
+                <span class="text-gray-600">|</span>
+                <a href="#" class="flex items-center gap-2 text-white hover:text-gray-300 uppercase">
+                    <i class="fa-solid fa-upload"></i> Upload
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Iconic Media Strip (Archive.org style) -->
+    <div class="bg-archive-panel border-b border-archive-border shadow-md relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div
+                class="flex justify-center sm:justify-start overflow-x-auto py-4 gap-8 sm:gap-12 text-center whitespace-nowrap scrollbar-hide">
+                <a href="#"
+                    class="group flex flex-col items-center gap-2 opacity-70 hover:opacity-100 transition-opacity">
+                    <i class="fa-solid fa-globe text-2xl mb-1"></i>
+                    <span class="text-xs font-bold uppercase tracking-wide">Web</span>
+                </a>
+                <a href="#"
+                    class="group flex flex-col items-center gap-2 opacity-100 border-b-2 border-white pb-1 -mb-5">
+                    <i class="fa-solid fa-book text-2xl mb-1"></i>
+                    <span class="text-xs font-bold uppercase tracking-wide">Texts</span>
+                </a>
+                <a href="#"
+                    class="group flex flex-col items-center gap-2 opacity-70 hover:opacity-100 transition-opacity">
+                    <i class="fa-solid fa-film text-2xl mb-1"></i>
+                    <span class="text-xs font-bold uppercase tracking-wide">Video</span>
+                </a>
+                <a href="#"
+                    class="group flex flex-col items-center gap-2 opacity-70 hover:opacity-100 transition-opacity">
+                    <i class="fa-solid fa-microphone-lines text-2xl mb-1"></i>
+                    <span class="text-xs font-bold uppercase tracking-wide">Audio</span>
+                </a>
+                <a href="#"
+                    class="group flex flex-col items-center gap-2 opacity-70 hover:opacity-100 transition-opacity">
+                    <i class="fa-solid fa-floppy-disk text-2xl mb-1"></i>
+                    <span class="text-xs font-bold uppercase tracking-wide">Software</span>
+                </a>
+                <a href="#"
+                    class="group flex flex-col items-center gap-2 opacity-70 hover:opacity-100 transition-opacity">
+                    <i class="fa-solid fa-image text-2xl mb-1"></i>
+                    <span class="text-xs font-bold uppercase tracking-wide">Images</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
+
+        <!-- Search Block -->
+        <div class="bg-archive-panel p-1 border border-archive-border mb-12 shadow-retro max-w-4xl mx-auto">
+            <div class="bg-archive-bg border border-archive-border p-6 sm:p-8">
+                <div class="flex flex-col md:flex-row gap-0">
+                    <div class="flex-grow relative">
+                        <i
+                            class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-500"></i>
+                        <input type="text"
+                            class="w-full bg-black border border-gray-600 text-white pl-12 pr-4 py-3 font-mono text-sm placeholder-gray-600 focus:border-white transition-colors rounded-none"
+                            placeholder="Search the archive...">
+                    </div>
+                    <button
+                        class="bg-gray-200 hover:bg-white text-black font-bold uppercase px-8 py-3 text-sm tracking-wider border-t md:border-t-0 md:border-l border-gray-600 transition-colors">
+                        Go
+                    </button>
+                </div>
+
+                <!-- Metadata Filters -->
+                <div class="mt-4 flex flex-wrap gap-4 text-xs font-mono text-gray-400">
+                    <label class="flex items-center gap-2 cursor-pointer hover:text-white">
+                        <input type="radio" name="search_type" class="accent-white" checked> Metadata
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer hover:text-white">
+                        <input type="radio" name="search_type" class="accent-white"> Text contents
+                    </label>
+                    <div class="ml-auto flex gap-3">
+                        <select class="bg-black border border-gray-700 rounded-none px-2 py-1 focus:border-white">
+                            <option>All Media</option>
+                            <option>Texts</option>
+                            <option>Audio</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Collection Stats -->
+        <div class="flex items-center justify-between mb-6 border-b-2 border-archive-border pb-2">
+            <h2 class="text-2xl font-bold text-white">Top Collections</h2>
+            <div class="font-mono text-xs text-archive-muted">
+                1,248 ITEMS • 15 COLLECTIONS
+            </div>
+        </div>
+
+        <!-- The Grid (Archive Style) -->
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
+
+            <!-- Item 1 -->
+            <a href="#" class="group block">
+                <div
+                    class="relative aspect-[3/4] bg-black border border-archive-border mb-3 group-hover:border-white transition-colors overflow-hidden">
+                    <div
+                        class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#222] to-[#111]">
+                        <i
+                            class="fa-solid fa-terminal text-4xl text-gray-600 group-hover:text-white transition-colors"></i>
+                    </div>
+                    <!-- Hover Overlay -->
+                    <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity">
+                    </div>
+                    <div
+                        class="absolute bottom-0 inset-x-0 bg-black/80 px-2 py-1 text-[10px] font-mono text-gray-400 border-t border-gray-800">
+                        <i class="fa-solid fa-eye mr-1"></i> 12k
+                    </div>
+                </div>
+                <h3
+                    class="font-bold text-sm leading-tight text-gray-300 group-hover:underline decoration-1 underline-offset-2 mb-1">
+                    Computer Science</h3>
+                <p class="font-mono text-[10px] text-gray-500 uppercase">324 Items</p>
+            </a>
+
+            <!-- Item 2 -->
+            <a href="#" class="group block">
+                <div
+                    class="relative aspect-[3/4] bg-black border border-archive-border mb-3 group-hover:border-white transition-colors overflow-hidden">
+                    <div
+                        class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#222] to-[#111]">
+                        <i
+                            class="fa-solid fa-gears text-4xl text-gray-600 group-hover:text-white transition-colors"></i>
+                    </div>
+                    <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity">
+                    </div>
+                    <div
+                        class="absolute bottom-0 inset-x-0 bg-black/80 px-2 py-1 text-[10px] font-mono text-gray-400 border-t border-gray-800">
+                        <i class="fa-solid fa-eye mr-1"></i> 8.4k
+                    </div>
+                </div>
+                <h3
+                    class="font-bold text-sm leading-tight text-gray-300 group-hover:underline decoration-1 underline-offset-2 mb-1">
+                    Mechanical Eng.</h3>
+                <p class="font-mono text-[10px] text-gray-500 uppercase">156 Items</p>
+            </a>
+
+            <!-- Item 3 -->
+            <a href="#" class="group block">
+                <div
+                    class="relative aspect-[3/4] bg-black border border-archive-border mb-3 group-hover:border-white transition-colors overflow-hidden">
+                    <div
+                        class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#222] to-[#111]">
+                        <i
+                            class="fa-solid fa-chart-line text-4xl text-gray-600 group-hover:text-white transition-colors"></i>
+                    </div>
+                    <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity">
+                    </div>
+                    <div
+                        class="absolute bottom-0 inset-x-0 bg-black/80 px-2 py-1 text-[10px] font-mono text-gray-400 border-t border-gray-800">
+                        <i class="fa-solid fa-eye mr-1"></i> 5.1k
+                    </div>
+                </div>
+                <h3
+                    class="font-bold text-sm leading-tight text-gray-300 group-hover:underline decoration-1 underline-offset-2 mb-1">
+                    Business Admin</h3>
+                <p class="font-mono text-[10px] text-gray-500 uppercase">203 Items</p>
+            </a>
+
+            <!-- Item 4 -->
+            <a href="#" class="group block">
+                <div
+                    class="relative aspect-[3/4] bg-black border border-archive-border mb-3 group-hover:border-white transition-colors overflow-hidden">
+                    <div
+                        class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#222] to-[#111]">
+                        <i class="fa-solid fa-atom text-4xl text-gray-600 group-hover:text-white transition-colors"></i>
+                    </div>
+                    <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity">
+                    </div>
+                    <div
+                        class="absolute bottom-0 inset-x-0 bg-black/80 px-2 py-1 text-[10px] font-mono text-gray-400 border-t border-gray-800">
+                        <i class="fa-solid fa-eye mr-1"></i> 2.3k
+                    </div>
+                </div>
+                <h3
+                    class="font-bold text-sm leading-tight text-gray-300 group-hover:underline decoration-1 underline-offset-2 mb-1">
+                    Physics</h3>
+                <p class="font-mono text-[10px] text-gray-500 uppercase">98 Items</p>
+            </a>
+
+            <!-- Item 5 -->
+            <a href="#" class="group block">
+                <div
+                    class="relative aspect-[3/4] bg-black border border-archive-border mb-3 group-hover:border-white transition-colors overflow-hidden">
+                    <div
+                        class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#222] to-[#111]">
+                        <i
+                            class="fa-solid fa-square-root-variable text-4xl text-gray-600 group-hover:text-white transition-colors"></i>
+                    </div>
+                    <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity">
+                    </div>
+                    <div
+                        class="absolute bottom-0 inset-x-0 bg-black/80 px-2 py-1 text-[10px] font-mono text-gray-400 border-t border-gray-800">
+                        <i class="fa-solid fa-eye mr-1"></i> 15k
+                    </div>
+                </div>
+                <h3
+                    class="font-bold text-sm leading-tight text-gray-300 group-hover:underline decoration-1 underline-offset-2 mb-1">
+                    Mathematics</h3>
+                <p class="font-mono text-[10px] text-gray-500 uppercase">412 Items</p>
+            </a>
+
+            <!-- Item 6 -->
+            <a href="#" class="group block">
+                <div
+                    class="relative aspect-[3/4] bg-black border border-archive-border mb-3 group-hover:border-white transition-colors overflow-hidden">
+                    <div
+                        class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#222] to-[#111]">
+                        <i
+                            class="fa-solid fa-book-open text-4xl text-gray-600 group-hover:text-white transition-colors"></i>
+                    </div>
+                    <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity">
+                    </div>
+                    <div
+                        class="absolute bottom-0 inset-x-0 bg-black/80 px-2 py-1 text-[10px] font-mono text-gray-400 border-t border-gray-800">
+                        <i class="fa-solid fa-eye mr-1"></i> 3.2k
+                    </div>
+                </div>
+                <h3
+                    class="font-bold text-sm leading-tight text-gray-300 group-hover:underline decoration-1 underline-offset-2 mb-1">
+                    Literature</h3>
+                <p class="font-mono text-[10px] text-gray-500 uppercase">89 Items</p>
+            </a>
+
+            <!-- Item 7 -->
+            <a href="#" class="group block">
+                <div
+                    class="relative aspect-[3/4] bg-black border border-archive-border mb-3 group-hover:border-white transition-colors overflow-hidden">
+                    <div
+                        class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#222] to-[#111]">
+                        <i
+                            class="fa-solid fa-compass-drafting text-4xl text-gray-600 group-hover:text-white transition-colors"></i>
+                    </div>
+                    <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity">
+                    </div>
+                    <div
+                        class="absolute bottom-0 inset-x-0 bg-black/80 px-2 py-1 text-[10px] font-mono text-gray-400 border-t border-gray-800">
+                        <i class="fa-solid fa-eye mr-1"></i> 1.8k
+                    </div>
+                </div>
+                <h3
+                    class="font-bold text-sm leading-tight text-gray-300 group-hover:underline decoration-1 underline-offset-2 mb-1">
+                    Architecture</h3>
+                <p class="font-mono text-[10px] text-gray-500 uppercase">67 Items</p>
+            </a>
+
+            <!-- Item 8 -->
+            <a href="#" class="group block">
+                <div
+                    class="relative aspect-[3/4] bg-black border border-archive-border mb-3 group-hover:border-white transition-colors overflow-hidden">
+                    <div
+                        class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#222] to-[#111]">
+                        <i
+                            class="fa-solid fa-brain text-4xl text-gray-600 group-hover:text-white transition-colors"></i>
+                    </div>
+                    <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity">
+                    </div>
+                    <div
+                        class="absolute bottom-0 inset-x-0 bg-black/80 px-2 py-1 text-[10px] font-mono text-gray-400 border-t border-gray-800">
+                        <i class="fa-solid fa-eye mr-1"></i> 4.5k
+                    </div>
+                </div>
+                <h3
+                    class="font-bold text-sm leading-tight text-gray-300 group-hover:underline decoration-1 underline-offset-2 mb-1">
+                    Psychology</h3>
+                <p class="font-mono text-[10px] text-gray-500 uppercase">145 Items</p>
+            </a>
+
+            <!-- Item 9 -->
+            <a href="#" class="group block">
+                <div
+                    class="relative aspect-[3/4] bg-black border border-archive-border mb-3 group-hover:border-white transition-colors overflow-hidden">
+                    <div
+                        class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#222] to-[#111]">
+                        <i
+                            class="fa-solid fa-flask text-4xl text-gray-600 group-hover:text-white transition-colors"></i>
+                    </div>
+                    <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity">
+                    </div>
+                    <div
+                        class="absolute bottom-0 inset-x-0 bg-black/80 px-2 py-1 text-[10px] font-mono text-gray-400 border-t border-gray-800">
+                        <i class="fa-solid fa-eye mr-1"></i> 2.1k
+                    </div>
+                </div>
+                <h3
+                    class="font-bold text-sm leading-tight text-gray-300 group-hover:underline decoration-1 underline-offset-2 mb-1">
+                    Chemistry</h3>
+                <p class="font-mono text-[10px] text-gray-500 uppercase">112 Items</p>
+            </a>
+
+            <!-- Request Item -->
+            <a href="#" class="group block opacity-50 hover:opacity-100 transition-opacity">
+                <div
+                    class="relative aspect-[3/4] bg-transparent border border-dashed border-gray-600 mb-3 flex items-center justify-center">
+                    <div class="flex flex-col items-center">
+                        <i class="fa-solid fa-plus text-3xl text-gray-500 mb-2"></i>
+                        <span class="text-[10px] font-mono text-gray-500 uppercase">Suggest Topic</span>
+                    </div>
+                </div>
+                <h3 class="font-bold text-sm leading-tight text-gray-400 mb-1">Contribute</h3>
+            </a>
+
+        </div>
+
+    </main>
+
+    <!-- Detailed Footer (Archive Style) -->
+    <footer class="bg-black border-t border-archive-border py-8 sm:py-12 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <h4 class="font-bold text-white mb-4 uppercase tracking-wider text-xs">About</h4>
+                    <ul class="space-y-2 text-sm text-archive-muted font-mono">
+                        <li><a href="#" class="hover:underline">Contact</a></li>
+                        <li><a href="#" class="hover:underline">Blog</a></li>
+                        <li><a href="#" class="hover:underline">Projects</a></li>
+                        <li><a href="#" class="hover:underline">Help</a></li>
+                        <li><a href="#" class="hover:underline">Donate</a></li>
+                        <li><a href="#" class="hover:underline">Jobs</a></li>
+                        <li><a href="#" class="hover:underline">Volunteer</a></li>
+                        <li><a href="#" class="hover:underline">People</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-white mb-4 uppercase tracking-wider text-xs">Resources</h4>
+                    <ul class="space-y-2 text-sm text-archive-muted font-mono">
+                        <li><a href="#" class="hover:underline">Online Books</a></li>
+                        <li><a href="#" class="hover:underline">Audio Books</a></li>
+                        <li><a href="#" class="hover:underline">Software Sites</a></li>
+                        <li><a href="#" class="hover:underline">Image Archive</a></li>
+                    </ul>
+                </div>
+                <div class="col-span-2 md:col-span-2">
+                    <div class="border border-archive-border p-4 bg-archive-bg">
+                        <p class="text-xs font-mono text-gray-400 mb-2">
+                            Slugworks Archive is a non-profit library of millions of free course materials, software,
+                            and lecture notes.
+                        </p>
+                        <div class="flex gap-4 mt-4">
+                            <i class="fa-brands fa-twitter text-xl text-gray-500 hover:text-white cursor-pointer"></i>
+                            <i class="fa-brands fa-instagram text-xl text-gray-500 hover:text-white cursor-pointer"></i>
+                            <i class="fa-brands fa-github text-xl text-gray-500 hover:text-white cursor-pointer"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center border-t border-archive-border pt-6">
+                <p class="text-[10px] font-mono text-gray-600">
+                    &copy; 2025 SLUGWORKS ARCHIVE. ALL RIGHTS RESERVED.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+</html>
